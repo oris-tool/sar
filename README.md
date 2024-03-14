@@ -14,6 +14,8 @@ To reproduce experiments illustrated in Sect.4 of the paper:
    - Run the python script: "/sar/plots/python_scripts/condition_based_plots.py", which will output Figs.7,8,9,10 in the folder "/sar/plots/figures/conditionbased"
    Note that evaluation of the transient of Fig.7 is reported as a vector in the script and not read from an external file. The vector values can be evaluated by running "/sar/src/main/java/org/oristool/conditionbased/Rej_n_samples.java"
 
+Attention! Before executing the python scripts, edit the file path string.
+
 ## Installation
 
 This repository provides a ready-to-use Maven project that you can easily import into an Eclipse workspace to start working with the [this library](https://github.com/oris-tool/sar/) (the version `2.0.0-SNAPSHOT` of the [Sirio library](https://github.com/oris-tool/sirio) is included as a Maven dependency). Just follow these steps:
