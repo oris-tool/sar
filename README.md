@@ -3,8 +3,16 @@
 This repository provides a Java library for modeling and evaluation of Software Aging and Rejuvenation (SAR) models beyond the enabling restriction. The approach is presented in the paper titled "Cost-Effective Software Rejuvenation Combining Time-Based and Condition-Based Policies", authored by Laura Carnevali, Marco Paolieri, Riccardo Reali, Leonardo Scommegna, and Enrico Vicario, submitted to the IEEE Transactions on Emerging Topics in Computing.
 
 ## Experimental reproducibility
+To reproduce experiments illustrated in Sect.3 of the paper:
+   - Run the main class: "/sar/src/main/java/org/oristool/timebased/results/BestPeriod.java", which evaluates the best period to use for models illustrated in Fig.3
+   - Run the main class: "/sar/src/main/java/org/oristool/timebased/results/BestPeriodTransient.java", which evaluates the transients illustrated in Fig.5
+   - Run the python script: "/sar/plots/python_scripts/time_based_plots.py", which will output Fig.4 and Figs.5 in the folder "/sar/plots/figures/timebased"
 
-TBD
+
+To reproduce experiments illustrated in Sect.4 of the paper:
+   - Run the main class: "/sar/src/main/java/org/oristool/conditionbased/ConditionBasedSteadyState.java", which evaluates the steady-state of the interested rewards.
+   - Run the python script: "/sar/plots/python_scripts/condition_based_plots.py", which will output Figs.7,8,9,10 in the folder "/sar/plots/figures/conditionbased"
+   Note that evaluation of the transient of Fig.7 is reported as a vector in the script and not read from an external file. The vector values can be evaluated by running "/sar/src/main/java/org/oristool/conditionbased/Rej_n_samples.java"
 
 ## Installation
 
