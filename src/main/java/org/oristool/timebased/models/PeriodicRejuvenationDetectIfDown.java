@@ -1,4 +1,4 @@
-/* This program is part of the ORIS Tool.
+package org.oristool.timebased.models;/* This program is part of the ORIS Tool.
  * Copyright (C) 2011-2020 The ORIS Authors.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.oristool.wosar22.models;
 
 import java.math.BigDecimal;
 
@@ -25,6 +24,7 @@ import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
 import org.oristool.petrinet.Transition;
+import org.oristool.timebased.models.PeriodicRejuvenationSkipIfDown;
 
 
 public class PeriodicRejuvenationDetectIfDown {

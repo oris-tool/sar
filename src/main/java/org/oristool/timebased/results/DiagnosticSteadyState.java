@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package results;
+package org.oristool.timebased.results;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import org.oristool.models.stpn.SteadyStateSolution;
 import org.oristool.models.stpn.steady.RegSteadyState;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
-import org.oristool.wosar22.models.DiagnosticRejuvenationSkipIfDown;
-import org.oristool.wosar22.models.PeriodicRejuvenationSkipIfDown;
+import org.oristool.timebased.models.DiagnosticRejuvenationSkipIfDown;
+import org.oristool.timebased.models.PeriodicRejuvenationSkipIfDown;
 
 /**
  * Steady-state unavailability for many rejuvenation periods

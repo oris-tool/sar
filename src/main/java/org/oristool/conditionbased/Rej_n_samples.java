@@ -1,3 +1,5 @@
+package org.oristool.conditionbased;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -158,11 +160,6 @@ public class Rej_n_samples {
 				new TransientSolution<>(bound, step, List.of(initialReg),
 						List.of(RewardRate.fromString(cond)), initialReg);
 
-
-
-		//TransientSolution<DeterministicEnablingState, RewardRate> transientRewards2 = TransientSolution.computeRewards(true, result, reward);
-
-
 		transientRewards.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + ".csv", 9);
 		transientRewards2.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + "_cumulative.csv", 9);
 		new TransientSolutionViewer(transientRewards);
@@ -294,26 +291,7 @@ public class Rej_n_samples {
 			s_trans_list.get(i).addFeature(new Priority(0));
 		}
 
-		//Expolinomial features automatically generated
-		/*List<GEN> detect_gens = new ArrayList<>();
-
-		DBMZone detect_d_0 = new DBMZone(new Variable("x"));
-		Expolynomial detect_e_0 = Expolynomial.fromString("3 * Exp[-2 x] + x^1 * Exp[-3 x] + x^2 * Exp[-4 x]");
-		//Normalization
-		detect_e_0.multiply(new BigDecimal(0.6089049475193872));
-		detect_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("5"));
-		detect_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("0"));
-		GEN detect_gen_0 = new GEN(detect_d_0, detect_e_0);
-		detect_gens.add(detect_gen_0);
-
-		PartitionedGEN detect_pFunction = new PartitionedGEN(detect_gens);
-		StochasticTransitionFeature detect_feature = StochasticTransitionFeature.of(detect_pFunction);
-		detect.addFeature(detect_feature);*/
-
 		detect.addFeature(StochasticTransitionFeature.newUniformInstance("0", "4"));
-
-		//error.addFeature(StochasticTransitionFeature.newErlangInstance(4, new BigDecimal("0.01667")));
-		//fail.addFeature(StochasticTransitionFeature.newErlangInstance(4, new BigDecimal("0.00476")));
 
 		fail.addFeature(StochasticTransitionFeature.newHypoExp(BigDecimal.valueOf(0.00208), BigDecimal.valueOf(0.00277)));
 		error.addFeature(StochasticTransitionFeature.newHypoExp(BigDecimal.valueOf(0.00615), BigDecimal.valueOf(0.01289)));
@@ -348,21 +326,6 @@ public class Rej_n_samples {
 		net.addPostcondition(rejFromErr, Ok);
 		net.addPostcondition(repair, Ok);
 
-		/*List<GEN> rejFromErr_gens = new ArrayList<>();
-
-		DBMZone rejFromErr_d_0 = new DBMZone(new Variable("x"));
-		Expolynomial rejFromErr_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
-		//Normalization
-		rejFromErr_e_0.multiply(new BigDecimal(1.0001248669425187));
-		rejFromErr_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("5"));
-		rejFromErr_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("0"));
-		GEN rejFromErr_gen_0 = new GEN(rejFromErr_d_0, rejFromErr_e_0);
-		rejFromErr_gens.add(rejFromErr_gen_0);
-
-		PartitionedGEN rejFromErr_pFunction = new PartitionedGEN(rejFromErr_gens);
-		StochasticTransitionFeature rejFromErr_feature = StochasticTransitionFeature.of(rejFromErr_pFunction);
-		rejFromErr.addFeature(rejFromErr_feature);*/
-
 		List<GEN> RejFromErr_gens = new ArrayList<>();
 		DBMZone RejFromErr_d_0 = new DBMZone(new Variable("x"));
 		Expolynomial RejFromErr_e_0 = Expolynomial.fromString("-45.9805 * Exp[-1.86195 x] + 57.4756 * x^1 * Exp[-1.86195 x] + -11.4951 * x^2 * Exp[-1.86195 x]");
@@ -375,20 +338,6 @@ public class Rej_n_samples {
 		StochasticTransitionFeature RejFromErr_feature = StochasticTransitionFeature.of(RejFromErr_pFunction);
 		rejFromErr.addFeature(RejFromErr_feature);
 
-		/*List<GEN> rejFromOk_gens = new ArrayList<>();
-
-		DBMZone rejFromOk_d_0 = new DBMZone(new Variable("x"));
-		Expolynomial rejFromOk_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
-		//Normalization
-		rejFromOk_e_0.multiply(new BigDecimal(1.0001248669425187));
-		rejFromOk_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("5"));
-		rejFromOk_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("0"));
-		GEN rejFromOk_gen_0 = new GEN(rejFromOk_d_0, rejFromOk_e_0);
-		rejFromOk_gens.add(rejFromOk_gen_0);
-
-		PartitionedGEN rejFromOk_pFunction = new PartitionedGEN(rejFromOk_gens);
-		StochasticTransitionFeature rejFromOk_feature = StochasticTransitionFeature.of(rejFromOk_pFunction);
-		rejFromOk.addFeature(rejFromOk_feature);*/
 		List<GEN> rejFromOk_gens = new ArrayList<>();
 		DBMZone rejFromOk_d_0 = new DBMZone(new Variable("x"));
 		Expolynomial rejFromOk_e_0 = Expolynomial.fromString("-58.9422 * Exp[-1.08048 x] + 88.4133 * x^1 * Exp[-1.08048 x] + -29.4711 * x^2 * Exp[-1.08048 x]");
@@ -402,20 +351,7 @@ public class Rej_n_samples {
 		rejFromOk.addFeature(rejFromOk_feature);
 
 		repair.addFeature(new PostUpdater("Clock=1", net));
-		/*List<GEN> repair_gens = new ArrayList<>();
 
-		DBMZone repair_d_0 = new DBMZone(new Variable("x"));
-		Expolynomial repair_e_0 = Expolynomial.fromString("3 * Exp[-2 x] + x^1 * Exp[-3 x] + x^2 * Exp[-4 x]");
-		//Normalization
-		repair_e_0.multiply(new BigDecimal(0.6088794926004228));
-		repair_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("25"));
-		repair_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("0"));
-		GEN repair_gen_0 = new GEN(repair_d_0, repair_e_0);
-		repair_gens.add(repair_gen_0);
-
-		PartitionedGEN repair_pFunction = new PartitionedGEN(repair_gens);
-		StochasticTransitionFeature repair_feature = StochasticTransitionFeature.of(repair_pFunction);
-		repair.addFeature(repair_feature);*/
 		List<GEN> repair_gens = new ArrayList<>();
 		DBMZone repair_d_0 = new DBMZone(new Variable("x"));
 		Expolynomial repair_e_0 = Expolynomial.fromString("-0.496617 * Exp[-0.250548 x] + 0.279347 * x^1 * Exp[-0.250548 x] + -0.0155193 * x^2 * Exp[-0.250548 x]");

@@ -10,7 +10,7 @@ To reproduce experiments illustrated in Sect.3 of the paper:
 
 
 To reproduce experiments illustrated in Sect.4 of the paper:
-   - Run the main class: "/sar/src/main/java/org/oristool/conditionbased/ConditionBasedSteadyState.java", which evaluates the steady-state of the interested rewards.
+   - Run the main class: "/sar/src/main/java/org/oristool/conditionbased/ConditionBasedSteadyState.java", which evaluates the steady-state of the interested rewards. The output can be copied in the following python file.
    - Run the python script: "/sar/plots/python_scripts/condition_based_plots.py", which will output Figs.7,8,9,10 in the folder "/sar/plots/figures/conditionbased"
    Note that evaluation of the transient of Fig.7 is reported as a vector in the script and not read from an external file. The vector values can be evaluated by running "/sar/src/main/java/org/oristool/conditionbased/Rej_n_samples.java"
 

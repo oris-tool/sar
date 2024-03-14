@@ -1,4 +1,4 @@
-/* This program is part of the ORIS Tool.
+package org.oristool.timebased.results;/* This program is part of the ORIS Tool.
  * Copyright (C) 2011-2021 The ORIS Authors.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,8 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package results;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -36,7 +34,7 @@ import org.oristool.models.stpn.SteadyStateSolution;
 import org.oristool.models.stpn.steady.RegSteadyState;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
-import org.oristool.wosar22.models.PeriodicRejuvenationSkipIfDown;
+import org.oristool.timebased.models.PeriodicRejuvenationSkipIfDown;
 
 /**
  * Steady-state unavailability, undetectedFailure, average metric for many rejuvenation periods
@@ -61,7 +59,7 @@ public class BestPeriod {
 
         for (boolean enablingRestriction : List.of(true, false)) {
             System.out.println(">> Enabling restriction: " + enablingRestriction);
-            PrintWriter csv = new PrintWriter("wosar22/plots/data/timebased/bestPeriod" + (enablingRestriction ? "EXP" : "GEN") + ".csv");
+            PrintWriter csv = new PrintWriter(System.getProperty("user.dir") + "/plots/data/timebased/bestPeriod" + (enablingRestriction ? "EXP" : "GEN") + ".csv");
             csv.printf("period,unavailability,undetectedFailure,useless,averageReward\n");
 
             Map<RewardRate, List<BigDecimal>> series = new LinkedHashMap<>();       

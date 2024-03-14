@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.oristool.wosar22.models;
+package org.oristool.timebased.models;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -107,7 +107,6 @@ public class PeriodicRejuvenationSkipIfDown {
             error.addFeature(StochasticTransitionFeature.newHypoExp(BigDecimal.valueOf(0.00615), BigDecimal.valueOf(0.01289)));
             detect.addFeature(StochasticTransitionFeature.newUniformInstance("0","4"));
 
-            //repair.addFeature(StochasticTransitionFeature.newExpolynomial("2.0366996375183555 * Exp[-1.51126 x]", OmegaBigDecimal.ZERO, new OmegaBigDecimal("0.896504")));
             List<GEN> repair_gens = new ArrayList<>();
             DBMZone repair_d_0 = new DBMZone(new Variable("x"));
             Expolynomial repair_e_0 = Expolynomial.fromString("-0.496617 * Exp[-0.250548 x] + 0.279347 * x^1 * Exp[-0.250548 x] + -0.0155193 * x^2 * Exp[-0.250548 x]");
@@ -119,7 +118,6 @@ public class PeriodicRejuvenationSkipIfDown {
             StochasticTransitionFeature repair_feature = StochasticTransitionFeature.of(repair_pFunction);
             repair.addFeature(repair_feature);
 
-            //rejFromErr.addFeature(StochasticTransitionFeature.newExpolynomial("4.277075236452792 * Exp[-3.17365 x]", OmegaBigDecimal.ZERO, new OmegaBigDecimal("0.426906")));
             List<GEN> RejFromErr_gens = new ArrayList<>();
             DBMZone RejFromErr_d_0 = new DBMZone(new Variable("x"));
             Expolynomial RejFromErr_e_0 = Expolynomial.fromString("-45.9805 * Exp[-1.86195 x] + 57.4756 * x^1 * Exp[-1.86195 x] + -11.4951 * x^2 * Exp[-1.86195 x]");
@@ -132,7 +130,6 @@ public class PeriodicRejuvenationSkipIfDown {
             StochasticTransitionFeature RejFromErr_feature = StochasticTransitionFeature.of(RejFromErr_pFunction);
             rejFromErr.addFeature(RejFromErr_feature);
 
-            //rejFromUp.addFeature(StochasticTransitionFeature.newExpolynomial("4.277075236452792 * Exp[-3.17365 x]", OmegaBigDecimal.ZERO, new OmegaBigDecimal("0.426906")));
             List<GEN> rejFromOk_gens = new ArrayList<>();
             DBMZone rejFromOk_d_0 = new DBMZone(new Variable("x"));
             Expolynomial rejFromOk_e_0 = Expolynomial.fromString("-58.9422 * Exp[-1.08048 x] + 88.4133 * x^1 * Exp[-1.08048 x] + -29.4711 * x^2 * Exp[-1.08048 x]");
@@ -147,8 +144,8 @@ public class PeriodicRejuvenationSkipIfDown {
         } else {
             error.addFeature(StochasticTransitionFeature.newExponentialInstance("0.004166666667"));
             fail.addFeature(StochasticTransitionFeature.newExponentialInstance("0.00119047619"));
-            detect.addFeature(StochasticTransitionFeature.newExponentialInstance("0.5"));  // rate was 1 in build_c1_EXP
-            repair.addFeature(StochasticTransitionFeature.newExponentialInstance("0.148484493"));  // rate was 1 in build_c1_EXP
+            detect.addFeature(StochasticTransitionFeature.newExponentialInstance("0.5"));
+            repair.addFeature(StochasticTransitionFeature.newExponentialInstance("0.148484493"));
             rejFromUp.addFeature(StochasticTransitionFeature.newExponentialInstance("0.6913621217"));
             rejFromErr.addFeature(StochasticTransitionFeature.newExponentialInstance("0.5550375205"));
         }

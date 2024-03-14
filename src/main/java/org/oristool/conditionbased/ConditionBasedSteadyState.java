@@ -1,3 +1,5 @@
+package org.oristool.conditionbased;
+
 import org.oristool.models.stpn.RewardRate;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
@@ -6,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Main {
+public class ConditionBasedSteadyState {
     public static int[] N_SAMPLES = {1,2,3,4,5,6,7,8};
     public static int[] PER = {90, 95, 99};
     public static int BUILD_TIMEBOUND = 693;

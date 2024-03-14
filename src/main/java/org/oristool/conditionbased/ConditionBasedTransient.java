@@ -1,9 +1,11 @@
+package org.oristool.conditionbased;
+
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
 
 import java.io.FileNotFoundException;
 
-public class Main2 {
+public class ConditionBasedTransient {
     public static int[] N_SAMPLES = {4};
     public static int[] PER = {90, 95, 99};
     public static int BUILD_TIMEBOUND = 693;

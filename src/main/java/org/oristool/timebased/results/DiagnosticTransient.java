@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package results;
+package org.oristool.timebased.results;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.commons.math3.util.Pair;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
-import org.oristool.wosar22.models.DiagnosticRejuvenationSkipIfDown;
+import org.oristool.timebased.models.DiagnosticRejuvenationSkipIfDown;
 
 /**
  * Transient unreliability and unavailability 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package results;
+package org.oristool.timebased.results;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
