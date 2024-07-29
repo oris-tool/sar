@@ -59,6 +59,7 @@ public class PeriodicRejuvenationSkipIfDown {
         Transition waitClock = pn.addTransition("waitClock");
         Transition rejFromErr = pn.addTransition("rejFromErr");
         Transition rejFromUp = pn.addTransition("rejFromUp");
+        Transition rejFromDown = pn.addTransition("rejFromDown");
         
         // rejuvenation stopped when repair starts
         pn.addInhibitorArc(Detected, waitClock);
@@ -84,6 +85,10 @@ public class PeriodicRejuvenationSkipIfDown {
         pn.addPrecondition(Err, rejFromErr);
         pn.addPostcondition(rejFromErr, Clock);
         pn.addPostcondition(rejFromErr, Up);
+        pn.addPrecondition(Down, rejFromDown);
+        pn.addPrecondition(Rej, rejFromDown);
+        pn.addPostcondition(rejFromDown, Detected);
+        rejFromDown.addFeature(StochasticTransitionFeature.newDeterministicInstance("0"));
         
         // lifecycle: Up -> Err -> Down -> Detected -> Up 
         pn.addPrecondition(Up, error);

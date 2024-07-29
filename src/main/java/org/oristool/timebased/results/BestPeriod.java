@@ -42,7 +42,7 @@ import org.oristool.timebased.models.PeriodicRejuvenationSkipIfDown;
 public class BestPeriod {
     public static void main(String[] args) throws FileNotFoundException {
         
-        int periodMin = 60;
+        int periodMin = 30;
         int periodMax = 4320;
         int periodDelta = 30;
         List<BigDecimal> periods = new ArrayList<>();
@@ -80,7 +80,7 @@ public class BestPeriod {
                 series.get(uselessUnavailability).add(rewards.getSteadyState().get(uselessUnavailability));
                 series.get(averageReward).add(rewards.getSteadyState().get(averageReward));
                 
-                BigDecimal metric = rewards.getSteadyState().get(averageReward);
+                BigDecimal metric = rewards.getSteadyState().get(unavailability);
                 if (bestMetric == null || metric.compareTo(bestMetric) < 0) {
                     bestPeriod = periods.get(i);
                     bestMetric = metric;

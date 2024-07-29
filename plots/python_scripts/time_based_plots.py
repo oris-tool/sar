@@ -24,15 +24,14 @@ def best_period(pdf, periods, unavailability,
     plt.scatter([best_period], [best_metric], color='red', s=5, zorder=2)
     plt.axvline(best_period, color='red', linewidth=0.5, zorder=2)
     plt.legend(fontsize=7, loc='upper right')
-    plt.ylabel('Probability')
-    plt.xlabel(r'Rejuvenation Period $p$ (Minutes)')
+    plt.ylabel('probability')
+    plt.xlabel(r'rejuvenation period $p$ (minutes)')
     plt.savefig(pdf, bbox_inches='tight')
-
 
 def unreliability(pdf, time, unreliability):
     _, ax = plt.subplots(figsize=(4, 3))
     ax.set_xlim(0, 4320)
-    ax.set_ylim(0, 1.0)
+    ax.set_ylim(0, 1.1)
     ax.xaxis.set_major_locator(MultipleLocator(2000))
     ax.yaxis.set_major_locator(MultipleLocator(0.1))
     colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
@@ -42,14 +41,13 @@ def unreliability(pdf, time, unreliability):
         colors = ['red', 'blue', 'magenta', 'green']
         for i, (label, ys) in enumerate(unreliability.items()):
             plt.plot(time, ys, '-', linewidth=1, label=label, color=colors[i])
-        plt.legend(fontsize=7, loc='lower right')
+        plt.legend(fontsize=7, loc='upper left')
         if len(unreliability.items()) == 3:
             ax.set_xlim(0, 400000)
             ax.xaxis.set_major_locator(MultipleLocator(100000))
-    plt.ylabel(r'Unreliability')
-    plt.xlabel(r'Time (Minutes)')
+    plt.ylabel(r'unreliability')
+    plt.xlabel(r'time (min)')
     plt.savefig(pdf, bbox_inches='tight')
-
 
 def cumulative_unavailability(pdf, time, cumulative_unavailability, *, xmin=None, xmax=None, ymax=None, xstep=None, loclegend=None):
     _, ax = plt.subplots(figsize=(4, 3))
@@ -69,11 +67,10 @@ def cumulative_unavailability(pdf, time, cumulative_unavailability, *, xmin=None
         colors = ['red', 'blue', 'magenta', 'green']
         for i, (label, ys) in enumerate(cumulative_unavailability.items()):
             plt.plot(time, ys, '-', linewidth=1, label=label, color=colors[i])
-        plt.legend(fontsize=7, loc=('lower right' if loclegend is None else loclegend))
-    plt.ylabel(r'Cumulative Unavailability (Minutes)')
-    plt.xlabel(r'Time (Minutes)')
+        plt.legend(fontsize=7, loc=('upper left' if loclegend is None else loclegend))
+    plt.ylabel(r'cumulative unavailability (min)')
+    plt.xlabel(r'time (min)')
     plt.savefig(pdf, bbox_inches='tight')
-
 
 def instant_unavailability(pdf, time, instant_unavailability, *, xmin=None, xmax=None, xstep=None, loclegend=None):
     _, ax = plt.subplots(figsize=(4, 3))
@@ -88,11 +85,10 @@ def instant_unavailability(pdf, time, instant_unavailability, *, xmin=None, xmax
         colors = ['red', 'blue', 'magenta', 'green']
         for i, (label, ys) in enumerate(instant_unavailability.items()):
             plt.plot(time, ys, '-', linewidth=1, label=label, color=colors[i])
-        plt.legend(fontsize=7, loc=('lower right' if loclegend is None else loclegend))
+        plt.legend(fontsize=7, loc=('upper left' if loclegend is None else loclegend))
     plt.ylabel(r'Unavailability')
     plt.xlabel(r'Time (Minutes)')
     plt.savefig(pdf, bbox_inches='tight')
-
 
 def read_data(csv, skip_cols=None):
     opener = gzip.open if csv.endswith('.gz') else open
@@ -106,9 +102,8 @@ def read_data(csv, skip_cols=None):
                 series[i].append(float(col))
     return list(series[i] for i in sorted(series))
 
-
 #CHOSE YOUR PATH
-PATH = "/Users/riccardoreali/Desktop/wosar22-master/wosar22/plots/"
+PATH = "/Users/riccardoreali/Desktop/STLAB/sar/plots/"
 
 # BEST PERIOD ---
 # Fig4: steady_state_variation_gen.pdf
@@ -120,37 +115,37 @@ best_period(PATH + f'figures/timebased/steady_state_variation_EXP.pdf', *data)
 
 # UNRELIABILITY
 # Fig5a: unreliability_comparison_600.pdf
-data_gen600 = read_data(PATH + f'data/timebased/instantUnreliability_GEN600_0.1_4320.csv', skip_cols=[0])
-data_exp600 = read_data(PATH + f'data/timebased/instantUnreliability_EXP600_0.1_4320.csv', skip_cols=[0])
+data_gen600 = read_data(PATH + f'data/timebased/instantUnreliability_GEN1050_.1_4320.csv', skip_cols=[0])
+data_exp600 = read_data(PATH + f'data/timebased/instantUnreliability_EXP1050_.1_4320.csv', skip_cols=[0])
 assert data_gen600[0] == data_exp600[0]
-unreliability(PATH + f'figures/timebased/unreliability_comparison_600_0.1.pdf', data_gen600[0],
-              {'Bounded Regeneration (Periodic)': data_gen600[1],
-               'Enabling Restriction (Periodic)': data_exp600[1]})
+unreliability(PATH + f'figures/timebased/unreliability_comparison_1050_.1.pdf', data_gen600[0],
+              {'time-based rejuvenation - bounded regeneration': data_gen600[1],
+               'time-based rejuvenation - enabling restriction': data_exp600[1]})
 
 # Fig5b: unreliability_comparison_420.pdf
-data_gen420 = read_data(PATH + f'data/timebased/instantUnreliability_GEN420_0.1_4320.csv', skip_cols=[0])
-data_exp420 = read_data(PATH + f'data/timebased/instantUnreliability_EXP420_0.1_4320.csv', skip_cols=[0])
+data_gen420 = read_data(PATH + f'data/timebased/instantUnreliability_GEN510_.1_4320.csv', skip_cols=[0])
+data_exp420 = read_data(PATH + f'data/timebased/instantUnreliability_EXP510_.1_4320.csv', skip_cols=[0])
 assert data_gen420[0] == data_exp420[0]
-unreliability(PATH + f'figures/timebased/unreliability_comparison_420_0.1.pdf', data_gen420[0],
-              {'Bounded Regeneration (Periodic)': data_gen420[1],
-               'Enabling Restriction (Periodic)': data_exp420[1]})
+unreliability(PATH + f'figures/timebased/unreliability_comparison_500_.1.pdf', data_gen420[0],
+              {'time-based rejuvenation -  bounded regeneration': data_gen420[1],
+               'time-based rejuvenation - enabling restriction': data_exp420[1]})
 
 
 # CUMULATIVE UNAVAILABILITY
 # Fig5c: cumulative_unavailability_comparison_600.pdf
-data_gen600 = read_data(PATH + f'data/timebased/cumulativeUnavailability_GEN600_0.1_4320.csv', skip_cols=[0])
-data_exp600 = read_data(PATH + f'data/timebased/cumulativeUnavailability_EXP600_0.1_4320.csv', skip_cols=[0])
+data_gen600 = read_data(PATH + f'data/timebased/cumulativeUnavailability_GEN1050_.1_4320.csv', skip_cols=[0])
+data_exp600 = read_data(PATH + f'data/timebased/cumulativeUnavailability_EXP1050_.1_4320.csv', skip_cols=[0])
 assert data_gen600[0] == data_exp600[0]
-cumulative_unavailability(PATH + f'figures/timebased/cumulative_unavailability_comparison_600_0.1.pdf', data_gen600[0],
-                          {'Bounded Regeneration (Periodic)': data_gen600[1],
-                           'Enabling Restriction (Periodic)': data_exp600[1]})
+cumulative_unavailability(PATH + f'figures/timebased/cumulative_unavailability_comparison_1050_.1.pdf', data_gen600[0],
+                          {'time-based rejuvenation - bounded regeneration': data_gen600[1],
+                           'time-based rejuvenation - enabling restriction': data_exp600[1]})
 
 # Fig5d: cumulative_unavailability_comparison_420.pdf
-data_gen420 = read_data(PATH + f'data/timebased/cumulativeUnavailability_GEN420_0.1_4320.csv', skip_cols=[0])
-data_exp420 = read_data(PATH + f'data/timebased/cumulativeUnavailability_EXP420_0.1_4320.csv', skip_cols=[0])
+data_gen420 = read_data(PATH + f'data/timebased/cumulativeUnavailability_GEN510_.1_4320.csv', skip_cols=[0])
+data_exp420 = read_data(PATH + f'data/timebased/cumulativeUnavailability_EXP510_.1_4320.csv', skip_cols=[0])
 data_gen420[0] = data_gen420[0][:43201]
 data_gen420[1] = data_gen420[1][:43201]
 assert data_gen420[0] == data_exp420[0]
-cumulative_unavailability(PATH + f'figures/timebased/cumulative_unavailability_comparison_420_0.1.pdf', data_gen420[0],
-                          {'Bounded Regeneration (Periodic)': data_gen420[1],
-                           'Enabling Restriction (Periodic)': data_exp420[1]})
+cumulative_unavailability(PATH + f'figures/timebased/cumulative_unavailability_comparison_420_.1.pdf', data_gen420[0],
+                          {'time-based rejuvenation - bounded regeneration': data_gen420[1],
+                           'time-based rejuvenation - enabling restriction': data_exp420[1]})

@@ -96,18 +96,18 @@ public class BestPeriodTransient {
                 "EnablingRestriction, Period, Reward, Times"
         );
 
-        for (BigDecimal period : List.of(new BigDecimal("600"), new BigDecimal("420"))) {
+        for (BigDecimal period : List.of(new BigDecimal("1050"), new BigDecimal("510"))) {
             for (boolean enablingRestriction : List.of(false, true)) {
                 Pair<PetriNet, Marking> model = PeriodicRejuvenationSkipIfDown.build(period, enablingRestriction);
                 String csvName = (enablingRestriction ? "EXP" : "GEN") + period;
                 times.append("\n").append(csvName).append(", ").append(period.toString()).append(", Unavailability, ");
                 long time = System.nanoTime();
-                unavailability(model, "2.", "4320", csvName);
+                unavailability(model, ".1", "4320", csvName);
                 times.append((System.nanoTime() - time)/1e9 + "s");
 
                 times.append("\n").append(csvName).append(", ").append(period.toString()).append(", Unreliability, ");
                 time = System.nanoTime();
-                unreliability(model, "2.", "4320", csvName);
+                unreliability(model, ".1", "4320", csvName);
                 times.append((System.nanoTime() - time)/1e9 + "s");
             }
         }

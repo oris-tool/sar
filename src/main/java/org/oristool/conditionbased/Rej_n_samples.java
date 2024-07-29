@@ -7,6 +7,7 @@ import java.lang.Integer;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.lang.Math.*;
 import java.util.function.Supplier;
@@ -49,9 +50,9 @@ import org.oristool.simulator.stpn.TransientMarkingConditionProbability;
 
 public class Rej_n_samples {
 	
-	public static int BUILD_TIMEBOUND = 693;            //transient analysis timebound to calculate the defer times
+	public static int BUILD_TIMEBOUND = 1107;            //transient analysis timebound to calculate the defer times
 	public static double EPSILON = 0.00001;	            //max admitted error
-	private static final Integer wRedSampleErr = 95;   //correct Red sample
+	private static final Integer wRedSampleErr = 99;    //correct Red sample
 	private static final String wGreenSampleErr = "5";  //wrong Green sample
 	private static final String wRedSampleOk = "5";     //wrong Red sample
 	private static final String wGreenSampleOk = "95";  //correct Green sample
@@ -75,7 +76,7 @@ public class Rej_n_samples {
 
 		// Qui invece credo che stia facendo vedere ilo transiente della  unreliability, che poi non + esattamente lei
 		try {
-			rejTransientAnalysis(net, marking, "Ko", "Ko>0||R>0||GR>0||GGR>0||GGGR>0||GGGGR>0||GGGGGR>0||GGGGGGR>0||GGGGGGGR>0||Rej>0", 4320, 1, wRedSampleErr, N_SAMPLES, false);
+			rejTransientAnalysis(net, marking, "Ko", "Ko>0||R>0||GR>0||GGR>0||GGGR>0||GGGGR>0||Rej>0", 4320, 1, wRedSampleErr, N_SAMPLES, false);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -125,9 +126,9 @@ public class Rej_n_samples {
 		System.out.print("\n Asse x:");
 		System.out.println(mapX.values());
 
-		transientRewards.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + ".csv", 9);
+		transientRewards.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + ".csv", 20);
 		if(cumulative)
-			transientRewards2.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + "_cumulative.csv", 9);
+			transientRewards2.writeCSV("PR" + pr + "_Stations" + station + "_" + reward + "_cumulative.csv", 20);
 
 		new TransientSolutionViewer(transientRewards);
 	}
@@ -178,6 +179,23 @@ public class Rej_n_samples {
 		
 		buildStepByStep(net, marking, r_list, s_list, defer_list, n_samples, rejuvenation_time, per);
 		optimizeDefer(net, marking, r_list, s_list, defer_list, rejuvenation_time);
+		//Ricostruisco la rete con tutti i tempi corretti
+		buildRej(net, marking);
+	}
+
+	public static void build(PetriNet net, Marking marking, int n_samples, int rejuvenation_time, int per, HashMap<String, Integer> deferMap, Function<Double, Double> sensitivityAt,  Function<Double, Double> specificityAt) {
+		int r_list_dim = 0;
+		for(int i=0; i<=n_samples; i++) r_list_dim += Math.pow(2, i);
+		List<Place> r_list = Arrays.asList(new Place[r_list_dim]);   //list of places correspondent to a result of a sample
+
+		int s_list_dim = 0;
+		for(int i=0; i<n_samples; i++) s_list_dim += Math.pow(2, i);
+		List<Place> s_list = Arrays.asList(new Place[s_list_dim]);   //list of places before sampling
+
+		List<Transition> defer_list = Arrays.asList(new Transition[r_list_dim]); //list of defers transitions
+
+		buildStepByStep(net, marking, r_list, s_list, defer_list, n_samples, rejuvenation_time, per);
+		optimizeDefer(net, marking, r_list, s_list, defer_list, rejuvenation_time, deferMap, sensitivityAt, specificityAt);
 		//Ricostruisco la rete con tutti i tempi corretti
 		buildRej(net, marking);
 	}
@@ -274,19 +292,19 @@ public class Rej_n_samples {
 		detect.addFeature(new PostUpdater(detect_update, net));
 		
 		for(int i=0; i<s_trans_list_dim; i++) {
-			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==0"));
+			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==0")); // FP
 			s_trans_list.get(i).addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(String.valueOf(100 - per), net)));
 			s_trans_list.get(i).addFeature(new Priority(0));
 			i++;
-			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==1"));
+			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==1")); // TP
 			s_trans_list.get(i).addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(String.valueOf(per), net)));
 			s_trans_list.get(i).addFeature(new Priority(0));
 			i++;
-			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==0"));
+			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==0")); // TN
 			s_trans_list.get(i).addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(String.valueOf(per), net)));
 			s_trans_list.get(i).addFeature(new Priority(0));
 			i++;
-			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==1"));
+			s_trans_list.get(i).addFeature(new EnablingFunction("Ok==1")); // FN
 			s_trans_list.get(i).addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(String.valueOf(100 - per), net)));
 			s_trans_list.get(i).addFeature(new Priority(0));
 		}
@@ -352,6 +370,8 @@ public class Rej_n_samples {
 
 		repair.addFeature(new PostUpdater("Clock=1", net));
 
+		//repair.addFeature(new PostUpdater());
+
 		List<GEN> repair_gens = new ArrayList<>();
 		DBMZone repair_d_0 = new DBMZone(new Variable("x"));
 		Expolynomial repair_e_0 = Expolynomial.fromString("-0.496617 * Exp[-0.250548 x] + 0.279347 * x^1 * Exp[-0.250548 x] + -0.0155193 * x^2 * Exp[-0.250548 x]");
@@ -375,7 +395,7 @@ public class Rej_n_samples {
 			String stop_conditions = getStopConditions(i, r_list, s_list, defer_list);
 			defered_entry = getOptimalDefer(net, marking, stop_conditions, rejuvenation_time);
 			if(defered_entry == null) defered_time = 0;
-			else defered_time = defered_entry.getKey();
+			else defered_time = defered_entry.getKey(); //* 0.1;
 			if(i == 0) {
 				defered_time_map.put(defer_list.get(0), (int) defered_time);
 				defer = defered_time;
@@ -407,12 +427,81 @@ public class Rej_n_samples {
 		System.out.println();
 		return defer_time_list;
 	}
+
+	private static List<Double> optimizeDefer(PetriNet net, Marking marking, List<Place> r_list, List<Place> s_list, List<Transition> defer_list, int rejuvenation_time, HashMap<String, Integer> deferMap, Function<Double, Double> sensitivityAt,  Function<Double, Double> specificityAt){
+		//TODO check that PER values sia adeguataente dimensionato (deve avere numero di samples pari a timeLimit/timeStep)
+		//find the optimal defer values
+		List<Double> defer_time_list = Arrays.asList(new Double[defer_list.size()]);
+		Map<Transition, Integer> defered_time_map = new HashMap<>(); //map that associate each defer transition to the sum of all the precedent defers' time
+		double defered_time, defer;
+		Entry<Integer, Double> defered_entry;
+		for(int i=0; i<defer_list.size(); i++) {
+			// Seleziono le stop condition che mi interessano
+			String stop_conditions = getStopConditions(i, r_list, s_list, defer_list);
+			if(deferMap.get(defer_list.get(i).getName()) != null){
+				defered_time = deferMap.get(defer_list.get(i).getName());
+
+			} else {
+				defered_entry = getOptimalDefer(net, marking, stop_conditions, rejuvenation_time);
+				if(defered_entry == null) defered_time = 0;
+				else defered_time = defered_entry.getKey(); //* 0.1;
+				deferMap.put(defer_list.get(i).getName(), (int)defered_time);
+			}
+
+			// cambiare PrecisionAndRecall sulla base del tempo
+
+			if(i == 0) {
+				defered_time_map.put(defer_list.get(0), (int) defered_time);
+				defer = defered_time;
+			}
+			else {
+				int j;
+				String p = r_list.get(i).getName();
+				if(p.charAt(p.length()-1) == 'G') { //if G is the last letter of the place name is a left son else is a right son
+					j = (i - 1) / 2;
+				}
+				else {
+					j = (i - 2) / 2;
+				}
+				int father_defered_time = defered_time_map.get(defer_list.get(j));
+				defer = defered_time - father_defered_time;
+				if(defer > 0) defered_time_map.put(defer_list.get(i), (int) defered_time);
+				else {
+					defer = 0;
+					defered_time_map.put(defer_list.get(i), father_defered_time);
+				}
+			}
+
+			//Setto il defer calcolato
+			defer_time_list.set(i, defer);
+			defer_list.get(i).removeFeature(StochasticTransitionFeature.class);
+			defer_list.get(i).addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal(defer), MarkingExpr.from("1", net)));
+			Place thePlace = net.getPostconditions(defer_list.get(i)).stream().findFirst().get().getPlace();
+			List<Transition> myImmTransitions = net.getTransitions().stream().filter(t -> net.getPrecondition(thePlace, t) != null).collect(Collectors.toList());
+			for(Transition t: myImmTransitions){
+				t.removeFeature(StochasticTransitionFeature.class);
+				// in realtà si dovrebbe fare una funzione diversa per precision and recall
+				Double probability = 0.;
+
+				if(myImmTransitions.indexOf(t) == 0) probability = 1 - sensitivityAt.apply(defered_time); // FP
+				if(myImmTransitions.indexOf(t) == 1) probability = sensitivityAt.apply(defered_time); // TP
+				if(myImmTransitions.indexOf(t) == 2) probability = specificityAt.apply(defered_time); // TN
+				if(myImmTransitions.indexOf(t) == 3) probability = 1 - sensitivityAt.apply(defered_time); // FN
+
+				t.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(String.valueOf(probability), net)));
+
+			}
+			System.out.println(defer_list.get(i).getName() + ": " + defer);
+		}
+		System.out.println();
+		return defer_time_list;
+	}
 	
 	public static Entry<Integer,Double> getOptimalDefer(PetriNet pn, Marking m, String stop_conditions, int rejuvenationTime) {
 		//compute p(Ko|OBS,t)
 		RegTransient analysis = RegTransient.builder()
 				.timeBound(new BigDecimal(rejuvenationTime))
-				.timeStep(new BigDecimal("1"))
+				.timeStep(new BigDecimal("1."))
 				.stopOn(MarkingCondition.fromString(stop_conditions))
 				.build();
 		TransientSolution<DeterministicEnablingState, Marking> result = analysis.compute(pn, m);
